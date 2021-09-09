@@ -161,7 +161,7 @@ d1bNPI <- d1NPI %>% group_by(date, facet, name) %>% summarise(value = mean(value
 g3 <-  ggplot() +
     geom_line(data = d1NPI, aes(x = date, y = value, color = name, linetype = name, group = group), size = 0.1) +
     geom_line(data = d1bNPI, aes(x = date, y = value, color = name, linetype = name), size = 0.5) +
-    geom_ribbon(data = d1NPI, aes(x = date, ymin = 0, ymax = restrictionC*300), fill = 'red', alpha = 0.20) +
+    geom_ribbon(data = d1NPI, aes(x = date, ymin = 0, ymax = restrictionC*300, group = iter), fill = 'red', alpha = 0.04) +
     scale_x_date('Date', date_labels = '%b', date_breaks = '2 months', limits = as.Date(c('2021-12-01', '2023-01-01'))) +
     scale_y_continuous('Hospitalised patients', limits = c(0, 20)) +
     scale_color_manual(NULL, labels = c('Unvaccinated', 'Vaccinated'), values = brewer.pal(8, 'Dark2')[3:4]) +
@@ -192,7 +192,7 @@ d2bNPI <- d2NPI %>% group_by(date, facet, name) %>% summarise(value = mean(value
 g4 <-  ggplot() +
     geom_line(data = d2NPI, aes(x = date, y = value, color = name, linetype = name, group = group), size = 0.1) +
     geom_line(data = d2bNPI, aes(x = date, y = value, color = name, linetype = name), size = 0.5) +
-    geom_ribbon(data = d2NPI, aes(x = date, ymin = 0, ymax = restrictionC*210), fill = 'red', alpha = 0.20) +
+    geom_ribbon(data = d2NPI, aes(x = date, ymin = 0, ymax = restrictionC*210, group = iter), fill = 'red', alpha = 0.04) +
     scale_x_date('Date', date_labels = '%b', date_breaks = '2 months', limits = as.Date(c('2021-12-01', '2023-01-01'))) +
     scale_y_continuous('Hospitalised patients', labels = scales::comma, limits = c(0, NA)) +
     scale_color_manual(NULL, labels = c('Unvaccinated', 'Vaccinated'), values = brewer.pal(8, 'Dark2')[3:4]) +
@@ -211,12 +211,12 @@ ggarrange(g1, g2, g3, g4,
           legend = 'bottom') +
     geom_text(data = data.frame(x = 0.375, y = 0.18, label = "Restrictions\napplied"),
               mapping = aes(x = x, y = y, label = label),
-              colour = "red", size = 1.2, hjust = 'right', inherit.aes = FALSE)
+              colour = "red", size = 1.4, hjust = 'right', inherit.aes = FALSE)
 
 ggsave(filename = here::here(paste0('Outputs/', today, '-hospitalisation-projections.png')), width = 6.5, height = 7.8, units = 'in')
 
 # hi-res version
-ggsave(filename = here::here(paste0('Outputs/', today, '-hospitalisation-projections-hi-res.jpeg')), width = 6.5, height = 7.8, units = 'in', dpi = 600)
+ggsave(filename = here::here(paste0('Outputs/', today, '-hospitalisation-projections-hi-res.png')), type = 'cairo',  bg = 'white', width = 6.5, height = 7.8, units = 'in', dpi = 600)
 
 
 ############################
@@ -311,7 +311,7 @@ i1bNPI <- i1NPI %>% group_by(date, facet, name) %>% summarise(value = mean(value
 i3 <-  ggplot() +
     geom_line(data = i1NPI, aes(x = date, y = value, color = name, linetype = name, group = group), size = 0.1) +
     geom_line(data = i1bNPI, aes(x = date, y = value, color = name, linetype = name), size = 0.5) +
-    geom_ribbon(data = i1NPI, aes(x = date, ymin = 0, ymax = restrictionC*200), fill = 'red', alpha = 0.20) +
+    geom_ribbon(data = i1NPI, aes(x = date, ymin = 0, ymax = restrictionC*200, group = iter), fill = 'red', alpha = 0.04) +
     scale_x_date('Date', date_labels = '%b', date_breaks = '2 months', limits = as.Date(c('2021-12-01', '2023-01-01'))) +
     scale_y_continuous('Infected individuals', limits = c(0, 210)) +
     scale_color_manual(NULL, labels = c('Unvaccinated', 'Vaccinated'), values = brewer.pal(8, 'Dark2')[3:4]) +
@@ -342,7 +342,7 @@ i2bNPI <- i2NPI %>% group_by(date, facet, name) %>% summarise(value = mean(value
 i4 <-  ggplot() +
     geom_line(data = i2NPI, aes(x = date, y = value, color = name, linetype = name, group = group), size = 0.1) +
     geom_line(data = i2bNPI, aes(x = date, y = value, color = name, linetype = name), size = 0.5) +
-    geom_ribbon(data = d2NPI, aes(x = date, ymin = 0, ymax = restrictionC*10000), fill = 'red', alpha = 0.20) +
+    geom_ribbon(data = d2NPI, aes(x = date, ymin = 0, ymax = restrictionC*10000, group = iter), fill = 'red', alpha = 0.04) +
     scale_x_date('Date', date_labels = '%b', date_breaks = '2 months', limits = as.Date(c('2021-12-01', '2023-01-01'))) +
     scale_y_continuous('Infected individuals', labels = scales::comma, limits = c(0, 10000)) +
     scale_color_manual(NULL, labels = c('Unvaccinated', 'Vaccinated'), values = brewer.pal(8, 'Dark2')[3:4]) +
@@ -361,11 +361,12 @@ ggarrange(i1, i2, i3, i4,
           legend = 'bottom') +
     geom_text(data = data.frame(x = 0.375, y = 0.18, label = "Restrictions\napplied"),
               mapping = aes(x = x, y = y, label = label),
-              colour = "red", size = 1.2, hjust = 'right', inherit.aes = FALSE)
+              colour = "red", size = 1.4, hjust = 'right', inherit.aes = FALSE)
 
 ggsave(filename = here::here(paste0('Outputs/', today, '-infection-projections.png')), width = 6.5, height = 7.8, units = 'in')
 
 # hi-res version
-ggsave(filename = here::here(paste0('Outputs/', today, '-infection-projections-hi-res.jpeg')), width = 6.5, height = 7.8, units = 'in', dpi = 600)
+ggsave(filename = here::here(paste0('Outputs/', today, '-infection-projections-hi-res.png')), type = 'cairo', bg = 'white', width = 6.5, height = 7.8, units = 'in', dpi = 600)
+
 
 # --- ### JAGO ### --- #
