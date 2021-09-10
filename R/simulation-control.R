@@ -11,6 +11,9 @@ library(RColorBrewer)
 # Fix random seed
 set.seed(1290)
 
+# create output directory
+dir.create("Outputs")
+
 # Source the simulation functions
 source('R/simulation-functions.R')
 
